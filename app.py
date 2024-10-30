@@ -6,13 +6,13 @@ import joblib
 # Importing Data
 
 # importing ML models and data
-classificator = joblib.load('models/Classification/model_99precision.pkl')
-classificator_scaler = joblib.load('models/Classification/model_99precision_scaler.pkl')
+classificator = joblib.load('assets/modelsClassification/model_99precision.pkl')
+classificator_scaler = joblib.load('assets/modelsClassification/model_99precision_scaler.pkl')
 
-regressor = joblib.load('models/Regression/model_94RMSE.pkl')
-regressor_scaler = joblib.load('models/Regression/model_94RMSE_scaler.pkl')
+regressor = joblib.load('assets/modelsRegression/model_94RMSE.pkl')
+regressor_scaler = joblib.load('assets/modelsRegression/model_94RMSE_scaler.pkl')
 
-validation_data = pd.read_csv('data/val_dataset.csv')
+validation_data = pd.read_csv('assets/data/val_dataset.csv')
 # Lista con el nuevo orden de las columnas 
 column_order = ['Age', 'AnnualIncome', 'CreditScore', 'EmploymentStatus', 'EducationLevel', 'Experience', 'LoanAmount', 'LoanDuration', 'MaritalStatus', 'NumberOfDependents', 'HomeOwnershipStatus', 'MonthlyDebtPayments', 'CreditCardUtilizationRate', 'NumberOfOpenCreditLines', 'NumberOfCreditInquiries', 'DebtToIncomeRatio', 'BankruptcyHistory', 'LoanPurpose', 'PreviousLoanDefaults', 'PaymentHistory', 'LengthOfCreditHistory', 'SavingsAccountBalance', 'CheckingAccountBalance', 'TotalAssets', 'TotalLiabilities', 'MonthlyIncome', 'UtilityBillsPaymentHistory', 'JobTenure', 'NetWorth', 'BaseInterestRate', 'InterestRate', 'MonthlyLoanPayment', 'TotalDebtToIncomeRatio', 'day','month','year'] # Reordenar las columnas del DataFrame
 validation_data = validation_data.drop(columns=['Unnamed: 0','LoanApproved','RiskScore'])
@@ -20,7 +20,7 @@ validation_data.index.name = 'Loan ID'
 validation_data = validation_data[column_order]
 
 encoders_labels = ['EducationLevel','EmploymentStatus','HomeOwnershipStatus','LoanPurpose','MaritalStatus']
-encoders = {encoder:joblib.load(f'models/encoder_{encoder}.pkl') for encoder in encoders_labels}
+encoders = {encoder:joblib.load(f'assets/modelsencoder_{encoder}.pkl') for encoder in encoders_labels}
 
 # PAGE STRUCTURE
 st.title('APPLICATION FOR CLASSIFY LOANS AND CALCULATE THEIR RISK')

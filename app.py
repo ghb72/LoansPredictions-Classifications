@@ -6,11 +6,11 @@ import joblib
 # Importing Data
 
 # importing ML models and data
-classificator = joblib.load('assets/modelsClassification/model_99precision.pkl')
-classificator_scaler = joblib.load('assets/modelsClassification/model_99precision_scaler.pkl')
+classificator = joblib.load('assets/models/Classification/model_99precision.pkl')
+classificator_scaler = joblib.load('assets/models/Classification/model_99precision_scaler.pkl')
 
-regressor = joblib.load('assets/modelsRegression/model_94RMSE.pkl')
-regressor_scaler = joblib.load('assets/modelsRegression/model_94RMSE_scaler.pkl')
+regressor = joblib.load('assets/models/Regression/model_94RMSE.pkl')
+regressor_scaler = joblib.load('assets/models/Regression/model_94RMSE_scaler.pkl')
 
 validation_data = pd.read_csv('assets/data/val_dataset.csv')
 # Lista con el nuevo orden de las columnas 
@@ -20,12 +20,14 @@ validation_data.index.name = 'Loan ID'
 validation_data = validation_data[column_order]
 
 encoders_labels = ['EducationLevel','EmploymentStatus','HomeOwnershipStatus','LoanPurpose','MaritalStatus']
-encoders = {encoder:joblib.load(f'assets/modelsencoder_{encoder}.pkl') for encoder in encoders_labels}
+encoders = {encoder:joblib.load(f'assets/models/encoder_{encoder}.pkl') for encoder in encoders_labels}
 
 # PAGE STRUCTURE
 st.title('APPLICATION FOR CLASSIFY LOANS AND CALCULATE THEIR RISK')
-# Data entry
-st.header('DATA ENTRY FOR A POSSIBLE LOAN OR CLIENT')
+# Info
+head1, head2 = st.columns([3,1])
+head1.header('DATA ENTRY FOR A POSSIBLE LOAN OR CLIENT')
+head2.image('assets/images/image-1.jpg')
 st.markdown('''
     This is an project to classify and calculate the risk of a possible or existent loan,
     in this case I use two ML models from skit-learn to calculate them, a linear regressor
@@ -52,7 +54,7 @@ for col in encoders_labels:
 # expander of validation data
 with st.expander('Data in validation database'):
     st.dataframe(show_validation_data.drop(columns=['year','month','day']))
-    row = st.number_input('Select Row Number of Table',0, len(validation_data))
+    row = st.number_input('Select Loan ID',0, len(validation_data))
     if st.button('Select'):
         st.session_state.data_entry_df =  validation_data.loc[[row],:]
         st.rerun()
@@ -133,8 +135,11 @@ try:
     # columns visualization
     st.success('Success Calculus', icon="✅") #success mesage
 
-    col1.metric(label='Status', value = classification)
-    col2.metric(label='Risk Value',value = risk)
+    delta1 = 'Approved Loan' if classification == 'Approved' else '-Not Approved Loan'
+    delta2 = 'Low Risk' if risk < 50 else '-High Risk'
+
+    col1.metric(label='Status', value = classification, delta = delta1)
+    col2.metric(label='Risk Value',value = risk, delta = delta2)
 
 except:
     st.warning('No Info of Invalid Info taken')
